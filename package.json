@@ -1,0 +1,57 @@
+{
+  "name": "pi-modular-soul",
+  "version": "0.1.0",
+  "description": "Live, per-session modular SOUL documents for the Pi agent",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "soul",
+    "identity",
+    "modules"
+  ],
+  "files": [
+    "src",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./state": "./src/state.js",
+    "./document": "./src/document.js"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.js"
+    ]
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test --test-timeout=120000 test/*.test.js",
+    "check": "node --check src/index.js && npm test"
+  },
+  "dependencies": {
+    "yaml": "^2.8.2"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-ai": "*",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "1.5.2",
+    "@earendil-works/pi-ai": "1.5.2",
+    "typebox": "1.3.27"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aristath/pi-modular-soul.git"
+  },
+  "homepage": "https://github.com/aristath/pi-modular-soul#readme",
+  "bugs": {
+    "url": "https://github.com/aristath/pi-modular-soul/issues"
+  }
+}

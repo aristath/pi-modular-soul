@@ -10,7 +10,7 @@ const fenceStart = line => /^ {0,3}(`{3,}|~{3,})/.exec(line);
 const metadataError = (line, problem) => new SoulFormatError(`SOUL metadata at line ${line}: ${problem}.`);
 
 /** Parse boundaries while keeping original body bytes/newlines in string slices. */
-export function parseSoul(text) {
+export function parseSoul(text, includeSource = false) {
   if (typeof text !== 'string') throw new TypeError('SOUL content must be text');
   const lines = [...text.matchAll(/[^\r\n]*(?:\r\n|\n|\r|$)/g)]
     .filter(match => match[0].length)
@@ -53,7 +53,8 @@ export function parseSoul(text) {
     if (typeof always !== 'boolean') throw metadataError(index + 1, 'always_load must be true or false');
     if (sections.length) sections.at(-1).body = text.slice(bodyStart, line.start);
     else preamble = text.slice(0, line.start);
-    sections.push({ id, description: header.description ?? '', always, body: '' });
+    sections.push({ id, description: header.description ?? '', always, body: '',
+      ...(includeSource ? {header:text.slice(line.start,lines[end].end)} : {}) });
     names.add(id); bodyStart = lines[end].end; index = end;
   }
   if (!sections.length) return { format: 'plain', preamble: '', sections: [], text };

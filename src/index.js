@@ -11,6 +11,16 @@ const guide = `Your SOUL may have optional modules. Call get_soul_catalogue to r
 const result = (data, isError = false) => ({ content: [{ type: 'text', text: JSON.stringify(data) }], details: data, ...(isError ? { isError: true } : {}) });
 
 export default function modularSoul(pi) {
+  pi.registerFlag('soul', { description: 'Initial named SOUL, or none to disable SOUL content and tools for this process', type: 'string' });
+  let installed = false;
+  pi.on('session_start', (_event, ctx) => {
+    if (installed || pi.getFlag('soul') === 'none') return;
+    installed = true;
+    enableSoul(pi, ctx);
+  });
+}
+
+function enableSoul(pi, initialContext) {
   const snapshots = new Map();
   let runOptions, forced, forceCaptured = false, warning;
   const config = ctx => configFrom(pi.getSettings(), ctx.cwd);
@@ -62,11 +72,12 @@ export default function modularSoul(pi) {
     }
   }
 
-  pi.registerFlag('soul', { description: 'Initial named SOUL for a session without a saved selection', type: 'string' });
-  pi.on('session_start', (_event, ctx) => {
+  const start = (_event, ctx) => {
     snapshots.clear(); warning = undefined;
     try { binding(ctx); } catch (error) { report(ctx, error.message); }
-  });
+  };
+  pi.on('session_start', start);
+  start(undefined, initialContext);
   pi.on('before_agent_start', event => { runOptions = event.systemPromptOptions; forced = undefined; forceCaptured = false; });
   pi.on('agent_start', () => {
     if (forceCaptured || !runOptions) return;

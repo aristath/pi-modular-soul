@@ -40,6 +40,12 @@ User commands (available through Pi's usual command handling):
 
 The initial CLI flag `pi --soul research` selects a named SOUL only when there is no saved binding. It never overrides a resumed chat. Only configured names are accepted; chat text and model names do not select identities. These commands are trusted user actions; the model's tools cannot choose another profile. The name `list` is reserved for the listing command (hosts can still bind it explicitly).
 
+`pi --soul none` disables this package for that process, including SOUL content,
+loading instructions, tools, and `/soul`. It takes precedence over a saved
+session selection. Saved selections and configuration are left intact; starting
+Pi again without the flag restores normal SOUL behavior. `none` is reserved in
+the CLI flag for this purpose.
+
 ## Author a document
 
 See the complete, fictional [example](examples/SOUL.md). Each section starts with a YAML block bounded by lines containing `---`:
